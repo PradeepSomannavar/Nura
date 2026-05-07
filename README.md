@@ -6,13 +6,15 @@ A modular Retrieval-Augmented Generation (RAG) pipeline for medical Q&A. Ask que
 
 Powered by **FAISS** vector search + **Groq** LLM inference.
 
+<img src="docs/image.png" alt="MediBot Chat Interface" width="720"/>
+
 </div>
 
 ---
 
 ## 📋 Table of Contents
 
-- [How It Works](#-how-it-works)
+- [Architecture](#-architecture)
 - [Quick Start](#-quick-start)
 - [Installation](#%EF%B8%8F-installation)
 - [Usage](#-usage)
@@ -25,23 +27,89 @@ Powered by **FAISS** vector search + **Groq** LLM inference.
 
 ---
 
-## 🧠 How It Works
+## 🏗️ Architecture
 
-MediBot answers questions by **retrieving relevant passages** from your medical PDFs first, then asking the LLM to answer based only on those passages.
+MediBot follows a modular RAG pipeline with three distinct layers:
 
 ```
-Your PDFs ──► Chunked ──► Embedded ──► FAISS Vector Index
-                                                    │
-User Query ─► Embed Query ─► Retrieve Top-K ────────┘
-                            │
-                    Assemble Prompt + Context
-                            │
-                    Groq LLM generates answer
-                            │
-              Answer + source document citations
+┌─────────────────────────────────────────────────────────┐
+│                    PRESENTATION LAYER                     │
+│  ┌─────────────┐   ┌──────────────┐   ┌───────────────┐ │
+│  │ Streamlit UI │   │   CLI Mode   │   │  FastAPI (opt)│ │
+│  └──────┬──────┘   └──────┬───────┘   └───────┬───────┘ │
+└─────────┼─────────────────┼───────────────────┼─────────┘
+          │                 │                   │
+┌─────────▼─────────────────▼───────────────────▼─────────┐
+│                     APPLICATION LAYER                     │
+│  ┌──────────┐  ┌──────────┐  ┌────────┐  ┌───────────┐  │
+│  │  config  │  │    cli   │  │  app   │  │ evaluate  │  │
+│  └──────────┘  └──────────┘  └────────┘  └───────────┘  │
+└────────────────────────┬─────────────────────────────────┘
+                         │
+┌────────────────────────▼─────────────────────────────────┐
+│                       RAG CORE                            │
+│  ┌──────────┐  ┌───────────┐  ┌────────┐  ┌───────────┐ │
+│  │ingestion │──►│vectorstore│──►│  llm   │──►│embeddings│ │
+│  │  (PDF →  │  │(FAISS idx)│  │(Groq   │  │(Sentence- │ │
+│  │  chunks) │  │           │  │ chain) │  │Transform) │ │
+│  └──────────┘  └───────────┘  └────────┘  └───────────┘ │
+└──────────────────────────────────────────────────────────┘
 ```
 
-This approach keeps answers factual, traceable, and easy to verify against source material.
+### Data Flow
+
+```
+                     ┌──────────────────┐
+                     │   Medical PDFs    │
+                     └────────┬─────────┘
+                              ▼
+                     ┌──────────────────┐
+                     │  Chunk & Embed   │
+                     │  (SentenceTrans.)│
+                     └────────┬─────────┘
+                              ▼
+                     ┌──────────────────┐
+                     │  FAISS Vector    │
+                     │  Index           │
+                     └────────┬─────────┘
+                              │
+  ┌────────────┐              │
+  │ User Query │              │
+  └──────┬─────┘              │
+         ▼                    │
+  ┌────────────────┐          │
+  │  Embed Query   │          │
+  └──────┬─────────┘          │
+         ▼                    ▼
+  ┌───────────────────────────────────┐
+  │   Similarity Search (Top-K)       │
+  └──────────────┬────────────────────┘
+                 ▼
+  ┌───────────────────────────────────┐
+  │  Assemble Prompt + Context        │
+  └──────────────┬────────────────────┘
+                 ▼
+  ┌───────────────────────────────────┐
+  │  Groq LLM generates answer        │
+  └──────────────┬────────────────────┘
+                 ▼
+  ┌───────────────────────────────────┐
+  │  Answer + Source Citations        │
+  └───────────────────────────────────┘
+```
+
+### Key Design Decisions
+
+| Layer | Component | Role |
+|-------|-----------|------|
+| **Ingestion** | `ingestion.py` | Load PDFs with PyPDF, split into overlapping chunks |
+| **Vector Store** | `vectorstore.py` | Build/load FAISS index, retrieve top-K passages |
+| **Embeddings** | `embeddings.py` | HuggingFace SentenceTransformer model |
+| **LLM** | `llm.py` | Groq-powered RAG chain with conversation history |
+| **CLI** | `cli.py` | Command-line entry point: `ingest`, `query`, `web` |
+| **UI** | `app.py` | Streamlit chat interface with streaming, citations, feedback |
+
+This architecture keeps responses factual, traceable, and grounded in the source material — no hallucinations.
 
 ---
 
@@ -49,8 +117,8 @@ This approach keeps answers factual, traceable, and easy to verify against sourc
 
 **1.** Clone and install:
 ```bash
-git clone https://github.com/PradeepSomannavar/Rag-project.git
-cd Rag-project
+git clone https://github.com/PradeepSomannavar/MedInfer.git
+cd MedInfer
 uv sync --extra dev
 ```
 
