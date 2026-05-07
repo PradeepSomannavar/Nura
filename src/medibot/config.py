@@ -39,4 +39,4 @@ RETRIEVER_K = int(os.getenv("RETRIEVER_K", "5"))
 
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.3"))
 LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "512"))
-ENABLE_STREAMING = os.getenv("ENABLE_STREAMING", "false").lower() == "true"
+ENABLE_STREAMING = os.getenv("ENABLE_STREAMING", "true").lower() == "true"
