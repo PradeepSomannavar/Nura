@@ -21,6 +21,7 @@ Powered by **FAISS** vector search + **Groq** LLM inference.
 - [Configuration](#-configuration)
 - [Docker](#-docker)
 - [Testing](#-testing)
+- [Evaluation](#-evaluation)
 - [Project Structure](#-project-structure)
 - [Troubleshooting](#-troubleshooting)
 - [Disclaimer](#%EF%B8%8F-disclaimer)
@@ -34,12 +35,12 @@ MediBot follows a modular RAG pipeline with three distinct layers:
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    PRESENTATION LAYER                     │
-│  ┌─────────────┐   ┌──────────────┐   ┌───────────────┐ │
-│  │ Streamlit UI │   │   CLI Mode   │   │  FastAPI (opt)│ │
-│  └──────┬──────┘   └──────┬───────┘   └───────┬───────┘ │
-└─────────┼─────────────────┼───────────────────┼─────────┘
-          │                 │                   │
-┌─────────▼─────────────────▼───────────────────▼─────────┐
+│  ┌─────────────┐   ┌──────────────┐                      │
+│  │ Streamlit UI │   │   CLI Mode   │                      │
+│  └──────┬──────┘   └──────┬───────┘                      │
+└─────────┼─────────────────┼──────────────────────────────┘
+          │                 │
+┌─────────▼─────────────────▼──────────────────────────────┐
 │                     APPLICATION LAYER                     │
 │  ┌──────────┐  ┌──────────┐  ┌────────┐  ┌───────────┐  │
 │  │  config  │  │    cli   │  │  app   │  │ evaluate  │  │
@@ -108,6 +109,7 @@ MediBot follows a modular RAG pipeline with three distinct layers:
 | **LLM** | `llm.py` | Groq-powered RAG chain with conversation history |
 | **CLI** | `cli.py` | Command-line entry point: `ingest`, `query`, `web` |
 | **UI** | `app.py` | Streamlit chat interface with streaming, citations, feedback |
+| **Eval** | `evaluate.py` | Retrieval quality evaluation suite |
 
 This architecture keeps responses factual, traceable, and grounded in the source material — no hallucinations.
 
@@ -124,8 +126,8 @@ uv sync --extra dev
 
 **2.** Set up your API keys:
 ```bash
-cp .env.example .env
-# Edit .env and add your GROQ_API_KEY
+# Create .env and add your GROQ_API_KEY
+echo "GROQ_API_KEY=gsk_xxxxxxxx" > .env
 ```
 
 **3.** Drop your medical PDFs into `data/`:
@@ -204,6 +206,7 @@ uv run medibot web
 ```
 
 Opens a chat UI at `http://localhost:8501` with:
+- Premium dark-themed landing page
 - Medical disclaimer before first use
 - Streaming responses
 - Expandable source document citations
@@ -218,26 +221,36 @@ uv run medibot query
 
 A terminal-based chat loop. Type `quit` to exit. Each answer shows the source snippets that support it.
 
+### Step 3 — Evaluate Retrieval Quality
+
+```bash
+uv run medibot evaluate
+# or
+python -m medibot.evaluate
+```
+
+Runs a set of predefined medical test queries against the FAISS index, measuring retrieval latency and keyword hit rates.
+
 ---
 
 ## 🔐 Configuration
 
-All settings are controlled via environment variables. Copy `.env.example` to `.env`:
+All settings are controlled via environment variables in a `.env` file:
 
 ```bash
 # Required
 GROQ_API_KEY=gsk_xxxxxxxx
 
 # Optional (shown with their defaults)
-HF_TOKEN=                         # HuggingFace token (optional for public models)
+HF_TOKEN=                              # HuggingFace token (optional for public models)
 EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 GROQ_MODEL=llama-3.1-8b-instant
-CHUNK_SIZE=1000                   # Characters per text chunk
-CHUNK_OVERLAP=150                 # Overlap between chunks
-RETRIEVER_K=5                     # Number of passages retrieved per query
-LLM_TEMPERATURE=0.3               # 0 = deterministic, 1 = creative
-LLM_MAX_TOKENS=512                # Maximum response length
-ENABLE_STREAMING=false            # Set true for token-by-token streaming
+CHUNK_SIZE=1000                        # Characters per text chunk
+CHUNK_OVERLAP=150                      # Overlap between chunks
+RETRIEVER_K=5                          # Number of passages retrieved per query
+LLM_TEMPERATURE=0.3                    # 0 = deterministic, 1 = creative
+LLM_MAX_TOKENS=512                     # Maximum response length
+ENABLE_STREAMING=true                  # Set true for token-by-token streaming
 FAISS_INDEX_PATH=vectorstore/db_faiss
 DATA_PATH=data/
 ```
@@ -278,19 +291,35 @@ uv run ruff format --check src/ tests/
 
 ---
 
+## 📊 Evaluation
+
+MediBot includes a built-in evaluation module that tests retrieval quality without requiring an LLM API call:
+
+```bash
+uv run medibot evaluate
+```
+
+This runs 5 predefined medical test queries (hypertension, diabetes, asthma, depression, myocardial infarction) and reports:
+- FAISS index statistics (vector count, dimensions, sample chunk lengths)
+- Retrieval latency per query
+- Keyword hit rate per query
+
+---
+
 ## 📁 Project Structure
 
 ```
 .
 ├── src/medibot/
-│   ├── __init__.py        # Package version
+│   ├── __init__.py        # Package version (0.2.0)
 │   ├── config.py          # Environment-driven configuration
 │   ├── embeddings.py      # SentenceTransformer embedding model
 │   ├── vectorstore.py     # FAISS index load and build
 │   ├── ingestion.py       # PDF loading and text chunking
 │   ├── llm.py             # Groq LLM + RAG chain with chat history
 │   ├── cli.py             # CLI entry point (ingest / query / web)
-│   └── app.py             # Streamlit web interface
+│   ├── app.py             # Streamlit web interface
+│   └── evaluate.py        # Retrieval quality evaluation
 ├── tests/
 │   ├── test_config.py     # Configuration validation
 │   ├── test_ingestion.py  # Document chunking tests
@@ -298,8 +327,9 @@ uv run ruff format --check src/ tests/
 ├── data/                  # Put your medical PDFs here
 ├── vectorstore/           # Generated FAISS index (gitignored)
 ├── pyproject.toml         # Project metadata and dependencies
+├── uv.lock                # Pinned dependency lockfile
 ├── Dockerfile             # Container build instructions
-└── .env.example           # Required environment variables
+└── .env                   # Environment variables (gitignored)
 ```
 
 ---
@@ -311,7 +341,7 @@ uv run ruff format --check src/ tests/
 | `FAISS index not found` | Vector store hasn't been built yet | Run `uv run medibot ingest` |
 | Empty or irrelevant answers | `k` too small or chunk size mismatch | Increase `RETRIEVER_K` to 5-10, adjust `CHUNK_SIZE` |
 | LLM ignoring context | Temperature too high | Lower `LLM_TEMPERATURE` to 0.2-0.3 |
-| `GROQ_API_KEY not set` | Missing `.env` file | Copy `.env.example` to `.env` and add your key |
+| `GROQ_API_KEY not set` | Missing `.env` file | Create `.env` and add your key |
 | Streamlit won't start | Port 8501 already in use | Kill the existing process or set `streamlit.server.port` |
 | Embedding model download fails | No internet or blocked HF | Set `HF_TOKEN` in `.env` or use a cached model path |
 
