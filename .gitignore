@@ -33,9 +33,20 @@ htmlcov/
 # Vector store (generated at runtime)
 vectorstore/db_faiss/
 
+# Evaluation reports (generated at runtime)
+reports/
+
+# SQLite database (generated at runtime)
+*.db
+*.sqlite3
+
 # Data files (PDFs are large and sourced locally)
 data/*.pdf
 
 # OS
 .DS_Store
 Thumbs.db
+
+# OpenCode agent config / skills (local tooling, not project code)
+.opencode/
+opencode.json
