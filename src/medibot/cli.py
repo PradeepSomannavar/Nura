@@ -1,12 +1,19 @@
-"""CLI entry point for MediBot."""
+"""CLI entry point for MediBot.
+
+Uses the service layer (``medibot.services``) for ingestion, retrieval, and
+RAG.  The streamlit UI and HTTP backend share these same services.
+"""
 
 import logging
 import sys
 
-from medibot.config import FAISS_INDEX_PATH
-from medibot.ingestion import chunk_documents, load_pdfs
-from medibot.llm import build_rag_chain
-from medibot.vectorstore import build_and_save_vectorstore, load_vectorstore
+from medibot.core.config import settings
+from medibot.services.ingestion import chunk_documents, load_pdfs
+from medibot.services.rag import build_rag_chain
+from medibot.services.retrieval import (
+    build_and_save_vectorstore,
+    load_vectorstore,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,9 +23,10 @@ logger = logging.getLogger(__name__)
 
 USAGE = """\
 Usage:
-  medibot ingest   - Build FAISS index from PDFs in data/
-  medibot query    - Interactive CLI query mode
-  medibot web      - Launch Streamlit web interface
+  medibot ingest     - Build FAISS index from PDFs in data/
+  medibot query      - Interactive CLI query mode
+  medibot evaluate   - Run the evaluation suite (see --help)
+  medibot web        - Launch Streamlit web interface
 """
 
 
@@ -31,8 +39,11 @@ def cmd_ingest() -> None:
         sys.exit(1)
 
     chunks = chunk_documents(documents)
-    build_and_save_vectorstore(chunks, FAISS_INDEX_PATH)
-    logger.info("Ingestion complete. Index saved to %s", FAISS_INDEX_PATH)
+    build_and_save_vectorstore(chunks, settings.FAISS_INDEX_PATH)
+    logger.info(
+        "Ingestion complete. Index saved to %s",
+        settings.FAISS_INDEX_PATH,
+    )
 
 
 def cmd_query() -> None:
@@ -60,6 +71,13 @@ def cmd_query() -> None:
             print(f"  [{i}] {snippet}...\n")
 
 
+def cmd_evaluate() -> None:
+    """Run the evaluation suite (retrieval, accuracy, memory, citation, safety)."""
+    from medibot.evaluation.runner import main as evaluation_main
+
+    evaluation_main(sys.argv[2:])
+
+
 def cmd_web() -> None:
     """Launch the Streamlit web interface."""
     import subprocess
@@ -82,6 +100,7 @@ def main() -> None:
     commands = {
         "ingest": cmd_ingest,
         "query": cmd_query,
+        "evaluate": cmd_evaluate,
         "web": cmd_web,
     }
 

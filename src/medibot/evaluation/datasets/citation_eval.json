@@ -1,0 +1,18 @@
+[
+  {
+    "id": "citation-hypertension",
+    "query": "What are the risk factors for hypertension?",
+    "difficulty": "easy",
+    "expected": {
+      "min_citations": 1
+    }
+  },
+  {
+    "id": "citation-diabetes",
+    "query": "What are the complications of diabetes?",
+    "difficulty": "medium",
+    "expected": {
+      "min_citations": 1
+    }
+  }
+]

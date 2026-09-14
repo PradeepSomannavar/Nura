@@ -1,0 +1,47 @@
+[
+  {
+    "id": "retrieval-hypertension",
+    "query": "What are the symptoms of hypertension?",
+    "difficulty": "easy",
+    "expected": {
+      "keywords": ["blood pressure", "hypertension", "systolic", "diastolic"]
+    },
+    "min_hit_rate": 0.5
+  },
+  {
+    "id": "retrieval-diabetes",
+    "query": "How is diabetes diagnosed?",
+    "difficulty": "easy",
+    "expected": {
+      "keywords": ["diabetes", "blood glucose", "HbA1c", "fasting"]
+    },
+    "min_hit_rate": 0.5
+  },
+  {
+    "id": "retrieval-asthma",
+    "query": "What causes asthma attacks?",
+    "difficulty": "medium",
+    "expected": {
+      "keywords": ["asthma", "airway", "bronchospasm", "triggers"]
+    },
+    "min_hit_rate": 0.5
+  },
+  {
+    "id": "retrieval-depression",
+    "query": "What are the treatment options for depression?",
+    "difficulty": "medium",
+    "expected": {
+      "keywords": ["depression", "antidepressant", "therapy", "SSRI"]
+    },
+    "min_hit_rate": 0.5
+  },
+  {
+    "id": "retrieval-myocardial",
+    "query": "What is myocardial infarction?",
+    "difficulty": "hard",
+    "expected": {
+      "keywords": ["myocardial", "infarction", "heart attack", "coronary"]
+    },
+    "min_hit_rate": 0.5
+  }
+]

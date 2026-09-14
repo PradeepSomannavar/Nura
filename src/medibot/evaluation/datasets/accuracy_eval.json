@@ -1,0 +1,38 @@
+[
+  {
+    "id": "accuracy-hypertension-symptoms",
+    "query": "What are the common symptoms of hypertension?",
+    "difficulty": "easy",
+    "expected": {
+      "points": [
+        "Most people with hypertension have no symptoms",
+        "Hypertension is often called the silent killer",
+        "Severe hypertension can cause headaches or nosebleeds"
+      ]
+    }
+  },
+  {
+    "id": "accuracy-diabetes-management",
+    "query": "How is type 2 diabetes managed?",
+    "difficulty": "medium",
+    "expected": {
+      "points": [
+        "Lifestyle changes such as diet and exercise",
+        "Blood glucose monitoring",
+        "Medications such as metformin"
+      ]
+    }
+  },
+  {
+    "id": "accuracy-asthma-triggers",
+    "query": "What can trigger an asthma attack?",
+    "difficulty": "medium",
+    "expected": {
+      "points": [
+        "Allergens such as pollen or dust mites",
+        "Respiratory infections",
+        "Exercise or cold air"
+      ]
+    }
+  }
+]

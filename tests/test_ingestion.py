@@ -1,6 +1,6 @@
 """Tests for MediBot ingestion pipeline."""
 
-from medibot.ingestion import chunk_documents
+from medibot.services.ingestion import chunk_documents
 
 
 def test_chunk_documents():

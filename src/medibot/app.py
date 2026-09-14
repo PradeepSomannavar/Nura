@@ -5,8 +5,8 @@ import logging
 import streamlit as st
 from langchain_core.messages import AIMessage, HumanMessage
 
-from medibot.llm import build_rag_chain
-from medibot.vectorstore import load_vectorstore
+from medibot.services.rag import build_rag_chain
+from medibot.services.retrieval import load_vectorstore
 
 import html
 import markdown as _md

@@ -1,14 +1,14 @@
-"""Tests for MediBot vector store module."""
+"""Tests for the MediBot vector store service."""
 
-from medibot.config import FAISS_INDEX_PATH
-from medibot.vectorstore import load_vectorstore
+from medibot.core.config import settings
+from medibot.services.retrieval import load_vectorstore
 
 
 def test_vectorstore_exists():
     """FAISS index directory should exist from prior build."""
     import os
 
-    assert os.path.exists(FAISS_INDEX_PATH)
+    assert os.path.exists(settings.FAISS_INDEX_PATH)
 
 
 def test_vectorstore_loads():

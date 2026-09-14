@@ -7,15 +7,22 @@ requires-python = ">=3.11"
 dependencies = [
     "faiss-cpu>=1.7",
     "groq>=0.29",
-    "langchain>=0.3",
-    "langchain-community>=0.3",
-    "langchain-groq>=0.3",
-    "langchain-huggingface>=0.3",
+    "langchain>=0.3,<1.0",
+    "langchain-community>=0.3,<1.0",
+    "langchain-groq>=0.3,<1.0",
+    "langchain-huggingface>=0.3,<1.0",
     "pypdf>=5.0",
     "python-dotenv>=1.0",
     "sentence-transformers>=3.0",
     "streamlit>=1.40",
     "markdown>=3.10",
+    "google-genai>=1.0",
+    "langchain-google-genai>=2.0",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic-settings>=2.4",
+    "sse-starlette>=2.1",
+    "sqlalchemy>=2.0",
 ]
 
 [project.scripts]

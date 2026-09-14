@@ -1,0 +1,32 @@
+[
+  {
+    "id": "memory-followup-medication",
+    "difficulty": "medium",
+    "conversation": [
+      "I was recently diagnosed with high blood pressure.",
+      "What lifestyle changes should I consider?",
+      "My doctor mentioned starting treatment — how long before I notice an effect?"
+    ],
+    "expected": {
+      "points": [
+        "The answer should reference high blood pressure from the earlier turn",
+        "The answer should connect lifestyle changes and treatment timeline"
+      ]
+    }
+  },
+  {
+    "id": "memory-followup-diet",
+    "difficulty": "hard",
+    "conversation": [
+      "My child has a fever and a sore throat.",
+      "When should I be concerned and see a doctor?",
+      "What can I give them to feel more comfortable in the meantime?"
+    ],
+    "expected": {
+      "points": [
+        "The answer should reference the child fever context",
+        "The answer should stay consistent with the earlier pediatric advice"
+      ]
+    }
+  }
+]
