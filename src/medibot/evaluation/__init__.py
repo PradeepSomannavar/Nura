@@ -1,4 +1,4 @@
-"""Evaluation framework for MediBot.
+"""Evaluation framework for Nura.
 
 Production-grade measurement of retrieval quality, answer accuracy, memory
 continuity, citation quality, and safety.  See ``runner.py`` for the CLI

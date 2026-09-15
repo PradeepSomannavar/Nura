@@ -221,7 +221,7 @@ _STREAM_PREFIXES = (
 def clean_stream_prefixes(chunks: Iterator[str]) -> Iterator[str]:
     """Strip common model prefixes from the leading streamed chunks.
 
-    Some models prepend ``assistant:`` / ``MediBot:`` style labels to the
+    Some models prepend ``assistant:`` / ``Nura:`` style labels to the
     first token.  This generator drops such prefixes so the UI never renders
     them.  Prefix matching is case-insensitive and only applied to the first
     non-empty chunk.

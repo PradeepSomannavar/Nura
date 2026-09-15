@@ -1,4 +1,4 @@
-"""Structured logging configuration for MediBot."""
+"""Structured logging configuration for Nura."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""FastAPI application factory for MediBot.
+"""FastAPI application factory for Nura.
 
 Registers routers, starts the database on startup, and wires in a health
 probe.  The streamlit/CLI entry points continue to import the service layer
@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     """Build and configure the FastAPI application."""
     app = FastAPI(
-        title="MediBot API",
+        title="Nura API",
         description="RAG-based clinical reference assistant",
         version="1.0.0",
         lifespan=lifespan,

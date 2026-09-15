@@ -1,4 +1,4 @@
-"""Business logic / orchestration layer for MediBot.
+"""Business logic / orchestration layer for Nura.
 
 Services depend on core, models, schemas, and prompts — never on api/.
 Route handlers (api/) depend on services, never the reverse.

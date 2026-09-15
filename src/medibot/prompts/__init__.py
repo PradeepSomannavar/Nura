@@ -1,4 +1,4 @@
-"""All prompt templates for MediBot.
+"""All prompt templates for Nura.
 
 Prompts are centralized here as named exports so they stay versionable,
 reviewable, and reusable across providers.  Never inline prompt strings

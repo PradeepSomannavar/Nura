@@ -1,4 +1,4 @@
-"""Streamlit dashboard for MediBot evaluation runs.
+"""Streamlit dashboard for Nura evaluation runs.
 
 Launch with:  uv run streamlit run src/medibot/evaluation/dashboard/dashboard.py
 """
@@ -15,7 +15,7 @@ from sqlalchemy import select
 from medibot.core.database import SessionLocal, init_db
 from medibot.models.evaluation import EvaluationCaseResult, EvaluationRun
 
-st.set_page_config(page_title="MediBot — Evaluation Dashboard", layout="wide")
+st.set_page_config(page_title="Nura — Evaluation Dashboard", layout="wide")
 
 
 @st.cache_resource
@@ -142,7 +142,7 @@ def export_buttons(results: list[EvaluationCaseResult]) -> None:
 
 def main() -> None:
     """Render the evaluation dashboard."""
-    st.title("MediBot Evaluation Dashboard")
+    st.title("Nura Evaluation Dashboard")
 
     runs = load_runs()
     if not runs:

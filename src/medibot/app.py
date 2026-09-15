@@ -1,4 +1,4 @@
-"""Streamlit web interface for MediBot -- Premium Landing + Chat UI."""
+"""Streamlit web interface for Nura -- Premium Landing + Chat UI."""
 
 import logging
 
@@ -359,7 +359,7 @@ def render_landing():
     st.markdown("""
 <div style="max-width:900px;margin:0 auto;text-align:center;padding:80px 24px 20px;">
   <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.15);border-radius:100px;font-size:11px;font-weight:600;color:#60a5fa;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">Features</div>
-  <h2 style="font-family:'Inter',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:800;color:#f1f5f9;letter-spacing:-1px;margin:0 0 10px;">Why MediBot?</h2>
+  <h2 style="font-family:'Inter',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:800;color:#f1f5f9;letter-spacing:-1px;margin:0 0 10px;">Why Nura?</h2>
   <p style="font-size:15px;color:#64748b;max-width:460px;margin:0 auto;line-height:1.65;">Built for medical professionals, students, and anyone who needs reliable, sourced medical information.</p>
 </div>
 """, unsafe_allow_html=True)
@@ -436,7 +436,7 @@ def render_landing():
 <div style="max-width:900px;margin:0 auto;padding:40px 24px 60px;display:flex;flex-direction:column;align-items:center;gap:10px;">
   <div style="display:flex;align-items:center;gap:8px;">
     <div style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2563eb,#06b6d4);border-radius:6px;font-size:14px;font-weight:800;color:#fff;">M</div>
-    <span style="font-size:14px;font-weight:700;color:#e2e8f0;">MediBot</span>
+    <span style="font-size:14px;font-weight:700;color:#e2e8f0;">Nura</span>
   </div>
   <p style="font-size:13px;color:#475569;margin:0;">Powered by <span style="color:#64748b;">RAG</span> + <span style="color:#64748b;">LLM</span></p>
   <p style="font-size:11.5px;color:rgba(71,85,105,.6);margin:2px 0 0;text-align:center;max-width:400px;line-height:1.5;">For reference only. Not a substitute for professional medical advice.</p>
@@ -516,7 +516,7 @@ def render_chat():
     with nav2:
         st.markdown(f"""
 <div class="chat-nav-brand">
-  <span class="chat-nav-brand-text">MediBot</span>
+  <span class="chat-nav-brand-text">Nura</span>
   <span class="chat-nav-badge">RAG + LLM</span>
   <span class="chat-nav-status"><span class="chat-nav-dot"></span>Online</span>
 </div>
@@ -545,9 +545,6 @@ def render_chat():
         return '\n'.join(parts)
 
     st.html(_build_msgs())
-
-    # ===================== DISCLAIMER =====================
-    st.html('<p class="chat-disc">Responses are for educational reference only. Not a substitute for professional medical advice.</p>')
 
     # ===================== INPUT =====================
     prompt = st.chat_input("Ask a medical question...", key="chat_input_main")
@@ -601,7 +598,7 @@ def get_rag_chain():
 #  MAIN
 # ==============================================================================
 def main():
-    st.set_page_config(page_title="MediBot", page_icon=":hospital:", layout="wide", initial_sidebar_state="collapsed")
+    st.set_page_config(page_title="Nura", page_icon=":hospital:", layout="wide", initial_sidebar_state="collapsed")
     st.html(_CSS)
 
     if "chain_loaded" not in st.session_state:

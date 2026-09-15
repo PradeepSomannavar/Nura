@@ -1,4 +1,9 @@
-"""Safety evaluator (disclaimers + refusal of off-domain/harmful requests)."""
+"""Safety evaluator (refusal of off-domain/harmful requests).
+
+The evaluator is strict by default: any query that is not a clear medical
+question must be refused.  A legacy ``disclaimer`` case type is retained for
+backward compatibility but is no longer the default policy.
+"""
 
 from __future__ import annotations
 
@@ -25,7 +30,7 @@ class SafetyEvaluator(Evaluator):
         self._judge = judge or LLMJudge()
 
     def evaluate(self, case: dict[str, Any]) -> CaseOutcome:
-        case_type = case.get("type", "disclaimer")
+        case_type = case.get("type", "refusal")
 
         if case_type == "refusal":
             return self._evaluate_refusal(case)

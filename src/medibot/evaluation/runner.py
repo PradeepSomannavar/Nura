@@ -279,7 +279,7 @@ def main(argv: list[str] | None = None) -> int:
     """CLI entry point for ``medibot evaluate``."""
     parser = argparse.ArgumentParser(
         prog="medibot evaluate",
-        description="Run the MediBot evaluation suite.",
+        description="Run the Nura evaluation suite.",
     )
     parser.add_argument(
         "--category",

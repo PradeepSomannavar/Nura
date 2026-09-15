@@ -89,13 +89,62 @@ _MEDICAL_MARKERS = (
     "cholesterol",
 )
 
+#: Markers that clearly indicate an off-topic (non-medical) request.  These are
+#: checked first so that e.g. "write HTML for a heart monitor" is NOT treated
+#: as a medical question just because it mentions a body word.  Only strong,
+#: unambiguous off-topic signals are listed to avoid refusing real medical
+#: queries ("ICD-10 code", "kidney function", "travel vaccine", ...).
+_NON_MEDICAL_MARKERS = (
+    "html",
+    "css",
+    "javascript",
+    "python",
+    "java",
+    "coding",
+    "debug",
+    "programming",
+    "algorithm",
+    "api",
+    "website",
+    "web page",
+    "recipe",
+    "cook",
+    "bake",
+    "weather",
+    "football",
+    "soccer",
+    "cricket",
+    "basketball",
+    "movie",
+    "film",
+    "song",
+    "music",
+    "joke",
+    "riddle",
+    "story",
+    "essay",
+    "homework",
+    "math",
+    "algebra",
+    "geometry",
+    "physics",
+    "translation",
+    "finance",
+)
+
 #: Regex to extract the ``intent`` value from an LLM JSON response.
 _INTENT_RE = re.compile(r'"intent"\s*:\s*"([A-Z_]+)"', re.IGNORECASE)
 
 
 def _keyword_classify(message: str) -> Intent:
-    """Deterministic medical-intent heuristic used as a fallback."""
+    """Deterministic medical-intent heuristic used as a fallback.
+
+    Off-topic markers take priority over medical markers, so the fallback is
+    conservative (refuses anything ambiguous / non-medical).
+    """
     lowered = message.lower()
+    if any(mark in lowered for mark in _NON_MEDICAL_MARKERS):
+        return Intent.NON_MEDICAL
     if any(mark in lowered for mark in _MEDICAL_MARKERS):
         return Intent.MEDICAL_QUERY
     return Intent.NON_MEDICAL
@@ -130,8 +179,9 @@ def _llm_classify(message: str, history: list[Any] | None = None) -> Intent | No
     prompt = f"Recent conversation:\n{history_text}\n\nLatest user message: {message}"
     try:
         llm = get_llm()
-        result = llm.invoke([SystemMessage(content=CLASSIFY_INTENT_SYSTEM),
-                             HumanMessage(content=prompt)])
+        result = llm.invoke(
+            [SystemMessage(content=CLASSIFY_INTENT_SYSTEM), HumanMessage(content=prompt)]
+        )
         text = result.content if isinstance(result.content, str) else str(result.content)
         return _parse_intent(text)
     except Exception:  # noqa: BLE001 - any provider failure falls back to heuristic
@@ -172,8 +222,7 @@ class IntentService:
             if text:
                 return [text]
         except Exception:  # noqa: BLE001
-            logger.warning("LLM refusal generation failed; using static text",
-                           exc_info=True)
+            logger.warning("LLM refusal generation failed; using static text", exc_info=True)
         return [STATIC_REFUSAL]
 
 

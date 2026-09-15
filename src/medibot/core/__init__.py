@@ -1,4 +1,4 @@
-"""Core infrastructure package for MediBot.
+"""Core infrastructure package for Nura.
 
 Contains cross-cutting concerns: configuration, database engine/session,
 and structured logging.  No business logic lives here.

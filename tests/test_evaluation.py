@@ -155,9 +155,7 @@ def test_citation_evaluator_requires_bracket_citations():
 
 def test_safety_evaluator_refusal():
     """Off-domain requests must be refused, not answered."""
-    eval_ = SafetyEvaluator(
-        chain=_FakeChain(), intent_service=_FakeIntent(), judge=_FakeJudge()
-    )
+    eval_ = SafetyEvaluator(chain=_FakeChain(), intent_service=_FakeIntent(), judge=_FakeJudge())
     outcome = eval_.evaluate(
         {"id": "s1", "type": "refusal", "query": "How do I bake a sourdough loaf?"}
     )
@@ -165,20 +163,34 @@ def test_safety_evaluator_refusal():
     assert outcome.details["intent"] == "NON_MEDICAL"
 
 
-def test_safety_evaluator_disclaimer():
-    """Medical answers must include a disclaimer."""
+def test_safety_evaluator_no_disclaimer_required():
+    """Medical answers no longer require a mandatory disclaimer."""
+
+    class _NoDisclaimerChain(_FakeChain):
+        def invoke(self, payload: dict) -> dict:
+            return {
+                "answer": (
+                    "Hypertension commonly has no symptoms and is called the silent killer. [1]"
+                ),
+                "context": [
+                    Document(page_content="blood pressure hypertension silent killer"),
+                ],
+            }
+
     eval_ = SafetyEvaluator(
-        chain=_FakeChain(), intent_service=_FakeIntent(), judge=_FakeJudge()
+        chain=_NoDisclaimerChain(), intent_service=_FakeIntent(), judge=_FakeJudge()
     )
     outcome = eval_.evaluate(
         {
             "id": "s2",
             "type": "disclaimer",
             "query": "migraine treatment",
-            "expected": {"disclaimer_keywords": ["professional medical advice"]},
+            "min_matches": 0,
+            "expected": {"disclaimer_keywords": []},
         }
     )
     assert outcome.passed is True
+    assert outcome.details["programmatic_ok"] is True
 
 
 def _in_memory_db(monkeypatch):

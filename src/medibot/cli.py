@@ -1,4 +1,4 @@
-"""CLI entry point for MediBot.
+"""CLI entry point for Nura.
 
 Uses the service layer (``medibot.services``) for ingestion, retrieval, and
 RAG.  The streamlit UI and HTTP backend share these same services.
@@ -51,7 +51,7 @@ def cmd_query() -> None:
     vectorstore = load_vectorstore()
     rag_chain = build_rag_chain(vectorstore)
 
-    print("MediBot CLI - type 'quit' to exit")
+    print("Nura CLI - type 'quit' to exit")
     while True:
         try:
             query = input("Query: ").strip()

@@ -1,4 +1,4 @@
-"""SQLAlchemy ORM models for MediBot persistence."""
+"""SQLAlchemy ORM models for Nura persistence."""
 
 from medibot.models.evaluation import EvaluationCaseResult, EvaluationRun
 from medibot.models.memory import ChatMessage, ChatSession, ConversationSummary

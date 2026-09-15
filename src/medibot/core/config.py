@@ -1,4 +1,4 @@
-"""Centralized configuration for MediBot (Pydantic BaseSettings).
+"""Centralized configuration for Nura (Pydantic BaseSettings).
 
 All environment-driven settings flow through the singleton ``settings``
 instance.  No other module should read environment variables directly.

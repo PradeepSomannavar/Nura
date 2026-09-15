@@ -21,14 +21,21 @@ from medibot.services.intent import (
         ("How is diabetes diagnosed?", Intent.MEDICAL_QUERY),
         ("What medications treat anxiety?", Intent.MEDICAL_QUERY),
         ("My child has a fever and rash", Intent.MEDICAL_QUERY),
+        ("Then give me the hypertension management steps", Intent.MEDICAL_QUERY),
         ("How do I bake a chocolate cake?", Intent.NON_MEDICAL),
         ("What's the weather today?", Intent.NON_MEDICAL),
         ("Tell me a joke", Intent.NON_MEDICAL),
         ("Can you fix my python code?", Intent.NON_MEDICAL),
+        ("What is 2 + 2?", Intent.NON_MEDICAL),
+        ("Write an HTML page for a heart health tracker.", Intent.NON_MEDICAL),
+        ("Explain how to debug my JavaScript.", Intent.NON_MEDICAL),
+        ("Solve this algebra equation for x.", Intent.NON_MEDICAL),
+        ("Explain Newton's laws of motion.", Intent.NON_MEDICAL),
+        ("What's the football score?", Intent.NON_MEDICAL),
     ],
 )
 def test_keyword_classify(message, expected):
-    """The deterministic heuristic correctly routes medical vs non-medical."""
+    """The deterministic heuristic strictly routes medical vs non-medical."""
     assert _keyword_classify(message) is expected
 
 
