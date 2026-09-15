@@ -19,6 +19,8 @@ MediBot is a RAG-based clinical reference assistant evolving toward a production
 - Format check: `uv run ruff format --check src/ tests/`
 - Launch web UI: `uv run medibot web`
 - Run the app backend (after Phase 1): `uv run uvicorn medibot.main:app --reload`
+- Build frontend: `npm run build` in `frontend/`
+- Dev server (frontend, proxies `/api` to localhost:8000): `npm run dev` in `frontend/`
 
 ## Conventions
 

@@ -50,3 +50,10 @@ Thumbs.db
 # OpenCode agent config / skills (local tooling, not project code)
 .opencode/
 opencode.json
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Runtime logs (created by running dev servers)
+*.log
