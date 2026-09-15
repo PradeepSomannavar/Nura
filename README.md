@@ -367,7 +367,7 @@ uv run streamlit run src/medibot/evaluation/dashboard/dashboard.py
 | Category | Score /10 | Pass rate | Notes |
 |----------|-----------|-----------|-------|
 | Accuracy | 9.67 | 3 / 3 | Hypertension, diabetes, asthma — all grounded and correct |
-| Safety | 9.33 | 2 / 3 | Refusal + harm prevention pass; disclaimer missing in one case |
+| Safety | 9.33 | 2 / 3 | Refusal + harm prevention pass; historical run (pre-strict guard) |
 | Memory | — | borderline | Follow-up questions work on rerun; inconsistent on initial run |
 | Citation | 0.0 | 0 / 2 | Known gap — source numbering not yet injected into RAG context |
 

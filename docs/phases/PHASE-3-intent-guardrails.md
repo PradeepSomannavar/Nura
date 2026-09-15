@@ -6,7 +6,7 @@
 
 ## Objective
 
-Add a domain guard so **MediBot only answers medical/health-related queries**. An LLM-based intent classifier routes each user message to `MEDICAL_QUERY` or `NON_MEDICAL`. Non-medical queries get a **polite, in-character refusal** (no off-domain answers). Safety guardrails enforce citations + disclaimer.
+Add a **strict** domain guard so **MediBot only answers medical/health-related queries**. An LLM-based intent classifier routes each user message to `MEDICAL_QUERY` or `NON_MEDICAL`; **everything non-medical** — math, coding, HTML, general chat, etc. — is refused. Non-medical queries get a **polite, in-character refusal** (no off-domain answers). Safety guardrails prevent diagnosis/prescription and harmful content.
 
 ## In-Depth Todos
 
@@ -31,7 +31,7 @@ Add a domain guard so **MediBot only answers medical/health-related queries**. A
 - [ ] Send a `meta` SSE event with the classified intent (like CinephileGPT `meta` event).
 
 ### 4. Safety guardrails on answers
-- [ ] Enforce mandatory medical disclaimer appended to every answer (already in prompt; add a programmatic check/post-processor if needed).
+- [x] Enforce strict intent guard: only clear medical/health queries are answered; math, coding, HTML, general chat, etc. are refused (no per-response disclaimer is appended).
 - [ ] Enforce citation requirement: prompt already requests `[1]`,`[2]`; add evaluation check in phase 6.
 - [ ] Refuse harmful/irresponsible diagnostic prescriptions: add a guard prompt line — "Never provide definitive diagnosis or prescribe medication; recommend consulting a licensed professional." (Extend `MEDICAL_SYSTEM_PROMPT`.)
 - [ ] Do not run retrieval or spend LLM tokens on clearly off-domain queries (route to refusal early).
@@ -46,13 +46,13 @@ Add a domain guard so **MediBot only answers medical/health-related queries**. A
 
 ### 7. Verification
 - [ ] Sending "What's the weather?" → professional refusal, no retrieval.
-- [ ] Sending "What are hypertension symptoms?" → normal RAG answer + disclaimer.
+- [ ] Sending "What are hypertension symptoms?" → normal cited RAG answer.
 - [ ] `uv run ruff check` and `uv run pytest` pass.
 
 ## Definition of Done
 
-- Intent classifier routes medical vs non-medical reliably (with LLM + heuristic fallback).
+- Intent classifier routes medical vs non-medical reliably (with LLM + heuristic fallback); non-medical is refused.
 - Non-medical queries produce a brief professional refusal without running RAG.
-- Medical answers always carry disclaimer + citations.
+- Medical answers carry citations; no mandatory per-response disclaimer.
 - Guardrails active and configurable via settings.
 - Tests pass, ruff clean.

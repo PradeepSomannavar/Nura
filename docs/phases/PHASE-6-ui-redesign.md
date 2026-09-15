@@ -1,77 +1,61 @@
-# Phase 6 — Professional UI Redesign
+# Phase 6 — Monochrome UI (React frontend, brand "Nura")
 
-**Status:** Planned
-**Dependencies:** Phases 1–5 (all backend + feature work)
+**Status:** In progress — React scaffold built, backend SSE contract wired
+**Dependencies:** Phases 1–5 (backend API + SSE streaming + intent guardrails)
 **Skills to load:** `medibot-ui-design`, `web-design-guidelines`, `design-taste-frontend`
 
 ## Objective
 
-Replaces the current gradient-heavy, decorative `app.py` styling with a clean, professional, medical-grade UI that communicates trust, precision, and calm. No full-bleed gradients, no neon colors.
+Replace the Streamlit UI with a dedicated **React (Vite + TypeScript)** frontend branded **Nura**, connected to the FastAPI SSE backend. Strict **black-and-white / monochrome** design only — no accent color, no gradients, no neon. Clean, professional, medical-grade.
 
 ## Scope
 
-- Single file: `src/medibot/app.py` (the `_CSS` string + HTML structure + landing + chat renderers)
-- Add `docs/phases/PHASE-1-UI-design-plan.md` detailed design notes (this doc is the plan)
+- New `frontend/` directory: Vite + React 19 + TypeScript single-page app.
+- Consumes backend endpoints: `POST /api/chat/stream` (SSE), `POST /api/sessions`, `GET /api/sessions/{id}/messages`, `GET /api/health`.
+- Vite dev proxy: `/api` → `http://localhost:8000`.
+- Streaming contract (SSE event types): `meta`, `token`, `sources`, `done`, `error`.
+- Session persistence via `localStorage` (`nura.sessionId`); messages restored on load.
 
 ## In-Depth Todos
 
-### 1. Audit current styling
-- [ ] Read `src/medibot/app.py` fully (623 lines) and catalog every CSS class, gradient, shadow, and color.
-- [ ] Identify all full-bleed gradients, saturated colors, decorative blurs.
-- [ ] List interactive elements (navbar, buttons, chat input, source citations, feedback buttons).
+### 1. Scaffold frontend
+- [x] `package.json` (react 19, react-markdown, @phosphor-icons/react, vite 7, @vitejs/plugin-react 5, typescript ~5.8).
+- [x] `vite.config.ts` with `/api` proxy to `localhost:8000`.
+- [x] `tsconfig.json`, `index.html`, `src/main.tsx`, `src/vite-env.d.ts`.
+- [x] `.gitignore` entries: `frontend/node_modules/`, `frontend/dist/`.
 
-### 2. Establish the design token system
-- [ ] Define a single CSS custom-property block at top of `_CSS`:
-  - `--primary` (pick one: teal `#0F766E` OR blue `#2563EB`)
-  - `--primary-hover`, `--primary-soft` (rgba tint)
-  - `--bg`, `--surface`, `--border`, `--text`, `--text-muted`
-  - Semantic: `--success`, `--warning`, `--error`, `--info`
-  - `--radius-sm/md/lg`, `--shadow`, `--font-sans`, `--spacing-*`
-- [ ] Ensure light mode is the default; add optional dark mode via `prefers-color-scheme` if feasible (keep scope conservative).
+### 2. Monochrome design system
+- [x] `src/styles/global.css` — single token block, **black & white only**:
+  - Light: `--bg #FAFAFA`, `--surface #FFF`, `--border #E4E4E7`, `--ink #0A0A0A`, `--text #18181B`.
+  - Dark mode via `prefers-color-scheme` + optional toggle (`data-theme`), same ink-on-paper tokens inverted.
+  - One radius scale (10px), system font stack, focus-visible rings, reduced-motion support.
+- [ ] Verify contrast ≥ 4.5:1 for all body text (both modes).
 
-### 3. Rebuild navigation bar
-- [ ] Fixed top bar, height 56–64px, surface bg, `1px solid var(--border)` bottom border.
-- [ ] Brand: logo (inline SVG), "MediBot", muted subtitle "Clinical Reference".
-- [ ] Status badge: "Online" with subtle green pulse dot (muted green text, not neon).
-- [ ] Remove any gradient background from the current navbar.
+### 3. Components
+- [x] `Nav.tsx` — brand mark, back/home control, theme toggle (Sun/Moon).
+- [x] `Landing.tsx` — hero (eyebrow, headline, subhead, 2 CTAs) + "How it works" 3-step section + minimal footer. No stats clutter, no tiny-tagline strip.
+- [x] `Chat.tsx` — message list, SSE streaming, composer, auto-scroll, error handling, session create/restore.
+- [x] `Message.tsx` — user bubble (black bg / white text), assistant bubble (white bg / black border), markdown rendering, expandable sources `<details>`, typing indicator.
+- [x] `App.tsx` — landing ↔ chat view toggle, theme state.
 
-### 4. Rebuild chat interface
-- [ ] Message bubbles per skill:
-  - User: `var(--primary-soft)` bg, right-aligned, radius 10px
-  - Assistant: `var(--surface)` bg + 1px border, left-aligned
-- [ ] Source citations: `<details>` element, "View sources (n)" label, info-blue icon, muted text. Readable expandable block.
-- [ ] Feedback buttons (+1 / −1): subtle bordered buttons, primary on active.
-- [ ] Welcome screen: clean centered message, muted, no heavy decoration.
-- [ ] Chat input: 1px border, radius 8px, visible focus ring.
-- [ ] Medical disclaimer footer: clear, muted, persistent.
+### 4. Data layer
+- [x] `src/lib/types.ts` — `ChatEvent`, `SourceDoc`, `HistoryMessage`, `StoredMessage`.
+- [x] `src/lib/api.ts` — `createSession`, `fetchMessages`, SSE stream parser (`streamChat`).
+- [x] `src/lib/session.ts` — localStorage session id helpers.
 
-### 5. Rebuild landing page
-- [ ] Hero: headline (2.5–3rem, 700), one-line subhead, one primary CTA + one secondary CTA.
-- [ ] Stat blocks: big number (primary, 2rem) + muted uppercase label.
-- [ ] Feature cards: surface bg, 1px border, radius 12px, padding 24; soft tinted icon square; title (600) + muted description. Optional 3px primary top accent — restrained, no full-bleed gradient.
-- [ ] "How It Works" steps: numbered or simple ordered cards, consistent spacing.
-- [ ] CTA banner + footer: flat surfaces, muted text.
-
-### 6. Swap emoji/decorative icons to inline SVG
-- [ ] Replace emoji in landing/chat avatars with stroke-based inline SVGs using `currentColor`.
-- [ ] Keep icons consistent stroke weight.
-
-### 7. Accessibility & responsiveness
-- [ ] Verify contrast ≥ 4.5:1 for all body text.
-- [ ] Visible focus states on all interactive elements.
-- [ ] Breakpoints at 768px and 480px; ensure nav and cards stack gracefully.
-- [ ] Body font size ≥ 14px.
-
-### 8. Verification
-- [ ] Run `uv run ruff check src/` (ensure no import/style regressions).
-- [ ] Launch `uv run medibot web` and visually confirm no gradients/neon remain.
-- [ ] Confirm chat streaming still works with new CSS.
-- [ ] Confirm source citations and disclaimer render correctly.
+### 5. Verification
+- [x] `npm run build` passes (tsc + vite build).
+- [ ] Launch backend `uv run uvicorn medibot.main:app --reload`, then `npm run dev`.
+- [ ] Confirm SSE streaming, citations, refusals, session restore, dark mode, and 768px/480px layout.
 
 ## Definition of Done
 
-- No full-bleed gradients or neon colors remain.
-- Single design-token palette in `_CSS`.
-- Inline SVG icons replace emoji where used as icons.
-- Accessibility checks pass.
-- Chat streaming, citations, feedback, disclaimer all functional.
+- Monochrome only: no accent color, gradients, or neon anywhere.
+- Chat, citations, refusals, session persistence all functional against the FastAPI backend.
+- Accessibility and responsive breakpoints verified.
+
+## Run Commands
+
+- Backend: `uv run uvicorn medibot.main:app --reload`
+- Frontend dev: `npm run dev` (in `frontend/`, http://localhost:5173)
+- Build: `npm run build` (in `frontend/`)

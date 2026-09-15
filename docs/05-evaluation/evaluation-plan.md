@@ -9,7 +9,7 @@ Purpose: quantify MediBot quality per category, catch regressions, and drive fix
 | accuracy | `AccuracyEvaluator` | RAG chain answer → LLM judge | accuracy_eval.json (3) |
 | memory | `MemoryEvaluator` | Multi-turn chain w/ history → continuity judge | memory_eval.json (2) |
 | citation | `CitationEvaluator` | Regex `[n]` check + judge | citation_eval.json (2) |
-| safety | `SafetyEvaluator` | Refusal type + disclaimer type + judge | safety_eval.json (3) |
+| safety | `SafetyEvaluator` | Strict refusal of non-medical/math/coding/harmful + judge | safety_eval.json (4) |
 
 ## Runner
 `python -m medibot.evaluation.runner [--category X] [--limit N] [--case-id ID] [--sleep S] [--report-dir DIR] [--no-save-db]`

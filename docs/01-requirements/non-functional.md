@@ -4,7 +4,7 @@
 |----|-------------|--------------------|
 | N-1 | **Reliability** — no hard crash on provider outage | Gemini→Groq fallback; on both failing a professional error event, never raw exception ✅ |
 | N-2 | **Latency / token budget** — bounded prompt size | Hybrid memory: 10 raw messages (5 turns) + compact rolling summary ✅ |
-| N-3 | **Safety** — no diagnosis/prescription; always disclaimer; refuse harmful/off-domain | Intent guard + `MEDICAL_SYSTEM_PROMPT` guardrails + safety eval (2/3 pass) ✅ |
+| N-3 | **Safety** — no diagnosis/prescription; refuse everything except medical/health queries | Strict intent guard (LLM + conservative fallback) + `MEDICAL_SYSTEM_PROMPT` guardrails + safety eval ✅ |
 | N-4 | **Security** — never commit/log secrets; API keys only in `.env` (gitignored) | ✅ |
 | N-5 | **Maintainability** — layered modules, type hints, docstrings, lint-clean | Python 3.12, ruff (E,F,I,N,W,UP), 56 tests ✅ |
 | N-6 | **Testability** — deterministic CI | Unit tests use mock LLM/judge/chain; live checks optional ✅ |
@@ -13,6 +13,6 @@
 | N-9 | **Scale target** — single-tenant local MVP, SQLite/FAISS | Deferred decisions (Redis cache, Postgres) as ADRs when adopted |
 
 ## Acceptance baseline
-- Medical queries → grounded answer + disclaimer; non-medical → refusal.
+- Medical queries → grounded, cited answer; non-medical (math, coding, general chat, …) → refusal.
 - Memory survives page refresh (DB-backed). [UI wiring pending Phase 6]
 - Eval dashboard + SQLite run history accessible.

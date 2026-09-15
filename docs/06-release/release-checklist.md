@@ -15,7 +15,7 @@ Pre-flight before any release/tag. **Phase 6 blocks the first user-facing releas
 - [ ] `.env.example` (if present) has placeholder values only
 
 ## Behavior
-- [ ] Medical query → grounded answer + disclaimer
+- [ ] Medical query → grounded, cited answer (no mandatory disclaimer)
 - [ ] Non-medical / harmful → refusal without RAG (intent guard)
 - [ ] >5-turn conversation → summary generated + persisted; refresh restores conversation (Phase 6 wiring)
 - [ ] Gemini outage → answer via Groq fallback (no crash)

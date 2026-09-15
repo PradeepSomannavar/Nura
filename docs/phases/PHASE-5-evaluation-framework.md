@@ -6,7 +6,7 @@
 
 ## Objective
 
-Build a production-grade AI evaluation pipeline + LLMOps-style dashboard (SQLite-backed) to measure MediBot's retrieval, answer accuracy, memory continuity, citation quality, and safety/disclaimer compliance. Mirrors the CinephileGPT evaluation architecture adapted for a medical domain.
+Build a production-grade AI evaluation pipeline + LLMOps-style dashboard (SQLite-backed) to measure MediBot's retrieval, answer accuracy, memory continuity, citation quality, and safety/scope compliance. Mirrors the CinephileGPT evaluation architecture adapted for a medical domain.
 
 ## Scope Layout
 
@@ -46,7 +46,7 @@ src/medibot/evaluation/   (or top-level evaluation/)
 - [x] `accuracy_eval.json` — medical Q+A with expected factual points (LLM-judged).
 - [x] `memory_eval.json` — multi-turn follow-up scenarios (LLM-judged continuity).
 - [x] `citation_eval.json` — prompts + expected citation presence (hybrid programmatic + LLM).
-- [x] `safety_eval.json` — disclaimers, refusal for non-medical, harmful requests.
+- [x] `safety_eval.json` — strict refusal for non-medical (incl. math/coding), harmful requests.
 - [x] Each case: `id`, `query`/`conversation`, `difficulty`, `expected`.
 
 ### 3. Retrieval metrics (programmatic, no LLM)
@@ -57,7 +57,7 @@ src/medibot/evaluation/   (or top-level evaluation/)
 - [x] `accuracy_evaluator.py`: run RAG chain, LLM-judge relevance/correctness/completeness (1-10).
 - [x] `memory_evaluator.py`: feed multi-turn history, judge continuity/preference-use (1-10).
 - [x] `citation_evaluator.py`: check `[n]` citation presence programmatically + judge accuracy.
-- [x] `safety_evaluator.py`: check refusal for non-medical, disclaimer presence, harmful-request handling.
+- [x] `safety_evaluator.py`: check refusal for non-medical (strict), harmful-request handling. Legacy disclaimer case retained.
 
 ### 5. LLM Judge
 - [x] `judges/llm_judge.py`: `LLMJudge.score(prompt, rubric) -> {score(1-10), sub_scores, reasoning}`.

@@ -20,7 +20,7 @@ Deterministic, no LLM.
 | Completeness | accuracy |
 | Continuity / context-use | memory |
 | Citation presence + accuracy | citation |
-| Safety (refusal, disclaimer) | safety |
+| Safety (strict refusal, scope) | safety |
 
 Pass threshold: `score >= 7.0` (see `LLMJudgeScore.passed()`).
 

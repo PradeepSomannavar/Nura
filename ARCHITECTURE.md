@@ -176,7 +176,7 @@ medibot.db       # SQLite (memory, logs, eval history)
 
 ### 3.9 Security
 - Secrets in `.env` (gitignored); never committed or logged.
-- Medical content disclaimer is always included in system prompt output.
+- Non-medical (and harmful) queries are refused by a strict intent guard; no per-response disclaimer is appended.
 
 ---
 
