@@ -54,6 +54,7 @@ opencode.json
 # Frontend
 frontend/node_modules/
 frontend/dist/
+frontend/tsconfig.tsbuildinfo
 
 # Runtime logs (created by running dev servers)
 *.log
