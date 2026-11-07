@@ -421,6 +421,6 @@ To rebuild the vector store with new PDFs, mount the `vectorstore/` directory or
 
 ---
 
-## Disclaimer
+# Disclaimer
 
 This tool is for **educational and reference purposes only**. It does **not** provide medical advice, diagnosis, or treatment recommendations. Always consult a licensed healthcare professional for medical decisions.
